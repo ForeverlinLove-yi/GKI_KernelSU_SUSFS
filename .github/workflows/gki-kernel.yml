@@ -331,12 +331,10 @@ jobs:
       - name: SUKISU管理器信息
         if: ${{ inputs.kernelsu_variant == 'SukiSU' }}
         run: |
-          if [ ! -z "${{ vars.MANAGER_STR }}" ]; then
             cd "$CONFIG"
             cd ./KernelSU
-            sed -i 's/\(v\$1-\).*\(@\$\)/\1${{ vars.MANAGER_STR }}\2/' ./kernel/Makefile 
-            sed -n '50,70p' ./kernel/Makefile
-          fi
+            sed -i 's|v\$1-\$(shell cd \$(KSU_SRC); \$(GIT_BIN) rev-parse --short=8 HEAD)@\$(shell cd \$(KSU_SRC); \$(GIT_BIN) rev-parse --abbrev-ref HEAD)|v$1-爱你不论朝夕.|g' ./kernel/Kbuild
+            sed -n '50,70p' ./kernel/Kbuild
 
       - name: 为 KernelSU 变体安装 SUSFS 补丁
         if: ${{ !inputs.cancel_susfs }}
